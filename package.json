@@ -18,7 +18,6 @@
   "homepage": "https://github.com/ZeshanA/dashboard#readme",
   "dependencies": {
     "express": "^4.16.2",
-    "handlebars": "^4.0.11",
     "jade": "^1.11.0",
     "nodemon": "^1.14.11"
   }
