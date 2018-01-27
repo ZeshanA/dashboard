@@ -19,6 +19,8 @@
   "dependencies": {
     "express": "^4.16.2",
     "jade": "^1.11.0",
-    "nodemon": "^1.14.11"
+    "nodemon": "^1.14.11",
+    "websockets": "^0.2.0",
+    "ws": "^4.0.0"
   }
 }

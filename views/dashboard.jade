@@ -1,0 +1,18 @@
+doctype html
+html
+    head
+        title Dashboard
+    body
+        h1 You are logged in!
+        h2.balanceTitle Your balance.
+        p.balance
+        script.
+            const ws = new WebSocket('ws://127.0.0.1:8080');
+
+            ws.addEventListener('open', function open() {
+              ws.send('something');
+            });
+
+            ws.addEventListener('message', function incoming(data) {
+              alert("RECEIVED");
+            });
