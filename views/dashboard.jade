@@ -2,10 +2,14 @@ doctype html
 html
     head
         title Dashboard
+        style.
+            body {
+                font-family: Source Sans Pro;
+            }
     body
         h1 You are logged in!
         h2.balanceTitle Your balance.
-        p.balance
+        p.balance= balance
         script.
             const ws = new WebSocket('ws://127.0.0.1:8080');
 
@@ -14,5 +18,5 @@ html
             });
 
             ws.addEventListener('message', function incoming(data) {
-              alert("RECEIVED");
+              
             });
