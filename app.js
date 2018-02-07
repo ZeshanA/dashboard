@@ -2,6 +2,7 @@
 const express = require('express');
 const http = require('http');
 const url = require('url');
+const request = require('request');
 
 // Create Express app
 const app = express();
@@ -17,7 +18,11 @@ app.get('/', (req, res) => res.render('index'));
 
 // Serve logged-in dash page
 app.get('/dash', function(req, res) {
-	res.render('dashboard')
+	request('https://restcountries.eu/rest/v2/alpha/col', function(error, response, body) {
+		res.render('dashboard', {
+			balance: JSON.parse(body)['area']
+		});
+	});
 });
 
 // TODO: Endpoint for Monzo auth
@@ -38,5 +43,5 @@ wss.on('connection', function connection(ws) {
     console.log('received: %s', message);
   });
 
-  ws.send('something');
+  ws.send(1000);
 });
