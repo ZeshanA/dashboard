@@ -3,10 +3,21 @@ const express = require('express');
 const http = require('http');
 const url = require('url');
 const request = require('request');
+const passport = require('passport');
 require('dotenv').config();
 
 // Create Express app
 const app = express();
+
+// Initalise Passport
+app.use(passport.initialize());
+app.use(passport.session());
+passport.serializeUser(function(user, done) {
+	done(null, user)
+});
+passport.deserializeUser(function(user, done) {
+    done(null, user)
+});
 
 // Set viewing engine to Jade
 app.set("view engine", "jade");
@@ -30,10 +41,35 @@ app.get('/dash', function(req, res) {
 	});
 });
 
-// TODO: Endpoint for Monzo auth
-app.get('/auth/monzo', function(req, res) {
+// Configure Monzo Authentication
+let MonzoStrategy = require('passport-monzo').Strategy;
+passport.use(new MonzoStrategy({
+		clientID: process.env.MONZO_CLIENT_ID,
+		clientSecret: process.env.MONZO_CLIENT_SECRET,
+		callbackURL: 'http://localhost:3000/auth/monzo/callback'
+	},
+	function (accessToken, refreshToken, profile, done) {
+		let user = {
+			accessToken: accessToken,
+			refreshToken: refreshToken,
+			profile: profile
+		};
+		return done(null, user);
+    }
+));
 
-});
+// Endpoint for Monzo authentication
+app.get('/auth/monzo', passport.authenticate('monzo'));
+
+// Called after succesful authentication
+app.get('/auth/monzo/callback',
+	passport.authenticate('monzo', {session: true, failureRedirect: '/login_fail'}),
+	function(req, res) {
+		console.log("AUTH SUCCESSFUL");
+		console.log(req.user);
+		res.redirect('/dash');
+	}
+);
 
 // Listen on Port 3000
 app.listen(3000, () => console.log('Listening on Port 3000!'));
