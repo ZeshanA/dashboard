@@ -3,3 +3,5 @@ yarn.lock
 .idea
 package-lock.json
 *.config
+scss/bourbon
+public/css/*
