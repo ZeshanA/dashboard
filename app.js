@@ -13,7 +13,8 @@ app.use(session({
     secret: process.env.EXPRESS_SESSION_SECRET
 }));
 
-// Initalise Passport
+// Initialise Passport and define serialization
+// TODO: Implement database storage/access
 app.use(passport.initialize());
 app.use(passport.session());
 passport.serializeUser(function(user, done) {
