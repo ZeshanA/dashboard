@@ -36,6 +36,7 @@ app.get('/', (req, res) => res.render('index'));
 app.get('/dash', function(req, res) {
 
     // Parse the raw user profile and retrieve the accounts field
+    const user = req.session.user;
     const accs = JSON.parse(req.session.user.profile._raw).accounts;
     console.log("ACCOUNT INFO");
     console.log(accs);
@@ -44,7 +45,7 @@ app.get('/dash', function(req, res) {
     request({
         url: 'https://api.monzo.com/balance',
         qs: {'account_id': accs[1].id},
-        auth: {'bearer': req.session.user.accessToken}
+        auth: {'bearer': user.accessToken}
     }, function(err, resp, body) {
         // Parse the balance body
         const parsed_body = JSON.parse(body);
@@ -52,7 +53,7 @@ app.get('/dash', function(req, res) {
         // Render the dashboard
         res.render('dashboard', {
             name: {
-                first: req.session.user.profile.displayName.split(' ')[0]
+                first: user.profile.displayName.split(' ')[0]
             },
             balance: parsed_body['balance']
         });
