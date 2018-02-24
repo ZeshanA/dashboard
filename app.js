@@ -10,7 +10,7 @@ require('dotenv').config();
 // Create Express app
 const app = express();
 app.use(session({
-    secret: 'MY_SECRET'
+    secret: process.env.EXPRESS_SESSION_SECRET
 }));
 
 // Initalise Passport
