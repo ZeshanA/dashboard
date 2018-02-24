@@ -6,10 +6,11 @@ html
     body
         header.headerBar
             p.logo Dashboard
-        h1 Welcome, #{name.first}!
-        p Your finances are looking healthy!
-        h2.balanceTitle Your balance.
-        p.balance= balance
+        section.display
+            div.displayBG
+            section.greetingWrap
+                h1.greeting Welcome, #{name.first}!
+                p.comment Your finances are looking healthy.
         script.
             const ws = new WebSocket('ws://127.0.0.1:8080');
 
