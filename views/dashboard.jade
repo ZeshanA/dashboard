@@ -11,6 +11,12 @@ html
             section.greetingWrap
                 h1.greeting Welcome, #{name.first}!
                 p.comment Your finances are looking healthy.
+            div.modules
+                section.accountsWrap
+                    p.balance Your current balance is £#{balance}!
+                    ul.accounts
+                        li.monzoAccount Monzo Account with a balance of £1000
+
         script.
             const ws = new WebSocket('ws://127.0.0.1:8080');
 

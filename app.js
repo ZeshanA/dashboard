@@ -4,10 +4,14 @@ const http = require('http');
 const url = require('url');
 const request = require('request');
 const passport = require('passport');
+const session = require('express-session');
 require('dotenv').config();
 
 // Create Express app
 const app = express();
+app.use(session({
+    secret: 'MY_SECRET'
+}));
 
 // Initalise Passport
 app.use(passport.initialize());
@@ -30,15 +34,32 @@ app.get('/', (req, res) => res.render('index'));
 
 // Serve logged-in dash page
 app.get('/dash', function(req, res) {
-	request('https://restcountries.eu/rest/v2/alpha/col', function(error, response, body) {
-		res.render('dashboard', {
-			name: {
-				first: 'Zeshan',
-				last: 'Amjad'
-			},
-			balance: JSON.parse(body)['area']
-		});
-	});
+    console.log(req.user);
+
+    const accs = JSON.parse(req.user.profile._raw).accounts;
+    console.log("ACCOUNT INFO");
+    console.log(accs);
+
+    request({
+        url: 'https://api.monzo.com/balance',
+        qs: {
+            'account_id': accs[1].id
+        },
+        auth: {
+            'bearer': req.user.accessToken
+        }
+    }, function(err, resp, body) {
+        const parsed_body = JSON.parse(body);
+        console.log("BALANCE BODY RECEIVED");
+        console.log(body);
+        console.log("Your balance is", parsed_body["balance"]);
+        res.render('dashboard', {
+            name: {
+                first: req.user.profile.displayName.split(' ')[0]
+            },
+            balance: parsed_body["balance"]
+        })
+    });
 });
 
 // Configure Monzo Authentication
@@ -49,6 +70,7 @@ passport.use(new MonzoStrategy({
 		callbackURL: 'http://localhost:3000/auth/monzo/callback'
 	},
 	function (accessToken, refreshToken, profile, done) {
+        console.log(profile);
 		let user = {
 			accessToken: accessToken,
 			refreshToken: refreshToken,
@@ -66,7 +88,8 @@ app.get('/auth/monzo/callback',
 	passport.authenticate('monzo', {session: true, failureRedirect: '/login_fail'}),
 	function(req, res) {
 		console.log("AUTH SUCCESSFUL");
-		console.log(req.user);
+		// console.log(req.user);
+		req.session.user = req.user;
 		res.redirect('/dash');
 	}
 );

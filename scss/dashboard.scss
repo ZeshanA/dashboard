@@ -23,7 +23,7 @@ body {
   height: 400px;
   background-image: linear-gradient(top, rgba(9,107,207,1) 0%,rgba(0,176,250,1) 100%);
   position: absolute;
-  z-index: 0;
+  z-index: -1;
 }
 
 .greetingWrap {
