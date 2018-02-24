@@ -20,6 +20,10 @@ app.get('/', (req, res) => res.render('index'));
 app.get('/dash', function(req, res) {
 	request('https://restcountries.eu/rest/v2/alpha/col', function(error, response, body) {
 		res.render('dashboard', {
+			name: {
+				first: 'Zeshan',
+				last: 'Amjad'
+			},
 			balance: JSON.parse(body)['area']
 		});
 	});

@@ -7,7 +7,10 @@ html
                 font-family: Source Sans Pro;
             }
     body
-        h1 You are logged in!
+        header.headerBar
+            p.logo Dashboard
+        h1 Welcome, #{name.first}!
+        p Your finances are looking healthy!
         h2.balanceTitle Your balance.
         p.balance= balance
         script.
