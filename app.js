@@ -3,6 +3,7 @@ const express = require('express');
 const http = require('http');
 const url = require('url');
 const request = require('request');
+require('dotenv').config();
 
 // Create Express app
 const app = express();
