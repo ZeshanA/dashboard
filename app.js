@@ -34,31 +34,28 @@ app.get('/', (req, res) => res.render('index'));
 
 // Serve logged-in dash page
 app.get('/dash', function(req, res) {
-    console.log(req.user);
 
+    // Parse the raw user profile and retrieve the accounts field
     const accs = JSON.parse(req.user.profile._raw).accounts;
     console.log("ACCOUNT INFO");
     console.log(accs);
 
+    // Make a balance request
     request({
         url: 'https://api.monzo.com/balance',
-        qs: {
-            'account_id': accs[1].id
-        },
-        auth: {
-            'bearer': req.user.accessToken
-        }
+        qs: {'account_id': accs[1].id},
+        auth: {'bearer': req.user.accessToken}
     }, function(err, resp, body) {
+        // Parse the balance body
         const parsed_body = JSON.parse(body);
-        console.log("BALANCE BODY RECEIVED");
-        console.log(body);
-        console.log("Your balance is", parsed_body["balance"]);
+
+        // Render the dashboard
         res.render('dashboard', {
             name: {
                 first: req.user.profile.displayName.split(' ')[0]
             },
-            balance: parsed_body["balance"]
-        })
+            balance: parsed_body['balance']
+        });
     });
 });
 
