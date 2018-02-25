@@ -94,8 +94,6 @@ app.get('/dash', function(req, res) {
 
 // Miscellaneous logging for debug purposes
 function logData(data) {
-    console.log("BALANCE");
-    console.log(balance.balance);
     console.log("TRANSACTIONS");
     console.log(data);
     console.log("PARSED TRANSACTIONS");
