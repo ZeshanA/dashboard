@@ -3,7 +3,7 @@ html
     head
         title Dashboard
         link(rel='stylesheet', href='/css/dashboard.css')
-    body
+    body.dash
         header.headerBar
             p.logo Dashboard
         section.display
@@ -12,10 +12,12 @@ html
                 h1.greeting Welcome, #{name.first}!
                 p.comment Your finances are looking healthy.
             div.modules
-                section.accountsWrap
-                    p.balance Your current balance is £#{balance}!
+                section.module.accountsWrap
+                    div.balanceWrap
+                        p.balance £#{balance}
+                        p.label Your total balance
                     ul.accounts
-                        li.monzoAccount Monzo Account with a balance of £1000
+                        li.monzoAccount Monzo Account with a balance of £#{balance}
 
         script.
             const ws = new WebSocket('ws://127.0.0.1:8080');

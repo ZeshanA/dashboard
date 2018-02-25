@@ -95,6 +95,10 @@ Dashboard Page
 =========================================================
 */
 
+.dash .modules {
+  margin-top: 40px;
+}
+
 .displayBG {
   width: 100%;
   height: 400px;
@@ -122,5 +126,36 @@ Dashboard Page
 
   .comment {
     font-size: 1.5em;
+  }
+}
+
+.module {
+  width: 340px;
+  margin: 10px auto;
+  padding: 15px;
+  color: #333;
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 3px 5px rgba(0, 0, 0, 0.1);
+
+  .label {
+    opacity: 0.8;
+    font-size: 12px;
+    text-transform: uppercase;
+  }
+}
+
+.accountsWrap {
+  text-align: center;
+  .balanceWrap {
+    padding-bottom: 8px;
+    border-bottom: solid 1px #ddd;
+  }
+  .balance {
+    margin: 20px;
+    font-size: 2em;
+  }
+  .accounts {
+    list-style: none;
   }
 }
