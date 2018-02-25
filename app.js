@@ -33,33 +33,74 @@ app.use(express.static('public'));
 // Serve Hello World as project root
 app.get('/', (req, res) => res.render('index'));
 
+// Sends an HTTP request to the specified endpoint for the Monzo API
+// and returns a promise
+function fetchMonzoData(endpoint, account_id, accessToken) {
+    return new Promise(function(resolve, reject) {
+        request({
+            url: 'https://api.monzo.com/' + endpoint,
+            qs: {'account_id': account_id},
+            auth: {'bearer': accessToken}
+        }, function(err, resp, body) {
+            if (err) {
+                reject(err);
+            } else {
+                resolve(body);
+            }
+        });
+    });
+}
+
 // Serve logged-in dash page
 app.get('/dash', function(req, res) {
 
     // Parse the raw user profile and retrieve the accounts field
     const user = req.session.user;
     const accs = JSON.parse(req.session.user.profile._raw).accounts;
+    const currentAccount = accs[1];
     console.log("ACCOUNT INFO");
     console.log(accs);
 
-    // Make a balance request
-    request({
-        url: 'https://api.monzo.com/balance',
-        qs: {'account_id': accs[1].id},
-        auth: {'bearer': user.accessToken}
-    }, function(err, resp, body) {
-        // Parse the balance body
-        const parsed_body = JSON.parse(body);
+    // Create a promise for a Monzo balance request
+    let balance;
+    let balancePromise = fetchMonzoData('balance', currentAccount.id, user.accessToken);
 
-        // Render the dashboard
-        res.render('dashboard', {
-            name: {
-                first: user.profile.displayName.split(' ')[0]
-            },
-            balance: parsed_body['balance']
-        });
-    });
+    // Promise handling for Monzo data
+    balancePromise.then(JSON.parse, () => console.log("Balance Error"))
+                  .then(function(result) {
+                      // Succesfully fetched a Monzo balance
+                      balance = result;
+                      // Return a promise for the list of transactions
+                      return fetchMonzoData('transactions', currentAccount.id, user.accessToken);
+                  })
+                  .then(function(data) {
+                      // Logging for debug purposes
+                      logData(data);
+
+                      // We now have access to both the balance and the transactions list.
+                      // Parse the raw JSON to allow extraction of transactions.
+                      let transactions = JSON.parse(data).transactions;
+
+                      // Render the dashboard view with all the data it needs
+                      res.render('dashboard', {
+                          name: {
+                              first: user.profile.displayName.split(' ')[0]
+                          },
+                          balance: balance.balance,
+                          transactions: transactions
+                      });
+                  });
 });
+
+// Miscellaneous logging for debug purposes
+function logData(data) {
+    console.log("BALANCE");
+    console.log(balance.balance);
+    console.log("TRANSACTIONS");
+    console.log(data);
+    console.log("PARSED TRANSACTIONS");
+    console.log(JSON.parse(data).transactions);
+}
 
 // Configure Monzo Authentication
 let MonzoStrategy = require('passport-monzo').Strategy;
