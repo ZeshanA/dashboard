@@ -1,5 +1,13 @@
 @import 'normalise';
 
+/*
+=========================================================
+General
+=========================================================
+*/
+
+$monzoBG: #14233c;
+
 body {
   font-family: Museo Sans, Source Sans Pro, sans-serif;
 }
@@ -17,6 +25,75 @@ body {
 .logo {
   margin: 0;
 }
+
+/*
+=========================================================
+Homepage
+=========================================================
+*/
+
+.homepage {
+  width: 100%;
+  height: 90vh;
+  position: relative;
+
+  .main {
+    position: relative;
+    top: 50%;
+    transform: translateY(-50%);
+
+    text-align: center;
+  }
+
+  .heading {
+    margin-bottom: 0;
+    color: #222633;
+    font: {
+      size: 32px;
+      weight: 600;
+    }
+    line-height: 130%;
+  }
+
+  .subheading {
+    margin: 15px auto 30px auto;
+    color: #575c65;
+    font: {
+      size: 24px;
+      weight: 300;
+    }
+  }
+}
+
+.button {
+  border-radius: 8px;
+  padding: 17px 18px;
+  transition: opacity 0.15s ease-in-out;
+
+  &:hover {
+    opacity: 0.9;
+  }
+}
+
+.monzo.button {
+  background: $monzoBG;
+}
+
+.monzoButtonImage {
+  width: 188px;
+  height: 20px;
+  background: {
+    image: url('/img/monzo_sign_in.png');
+    size: 100%;
+  }
+  display: block;
+}
+
+/*
+=========================================================
+Dashboard Page
+=========================================================
+*/
 
 .displayBG {
   width: 100%;
