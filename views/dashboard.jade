@@ -18,6 +18,25 @@ html
                         p.label Your total balance
                     ul.accounts
                         li.monzoAccount Monzo Account with a balance of £#{balance}
+        section.transactions
+            h2.subheading Transactions
+            table.transactionsTable
+                tr.tableHeader
+                    th.merchant Merchant
+                    th.amount Amount
+                    th.date Date
+                    th.account Account
+                    th.category Category
+                for entry in transactions
+                    tr.transaction
+                        if entry.merchant == null
+                            td #{entry.counterparty.name}
+                        else
+                            td #{entry.merchant}
+                        td.amount=entry.amount
+                        td.date=entry.created
+                        td.account Monzo
+                        td.category=entry.category
 
         script.
             const ws = new WebSocket('ws://127.0.0.1:8080');

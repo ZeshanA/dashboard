@@ -15,6 +15,7 @@ body {
 .headerBar {
   width: 100%;
   padding: 15px 0;
+  background: #fff;
   font: {
     size: 21px;
     weight: 500;
@@ -95,6 +96,10 @@ Dashboard Page
 =========================================================
 */
 
+.dash {
+  background-color: #f5f7fa;
+}
+
 .dash .modules {
   margin-top: 40px;
 }
@@ -157,5 +162,39 @@ Dashboard Page
   }
   .accounts {
     list-style: none;
+  }
+}
+
+.transactions {
+  max-width: 960px;
+  margin: 0 auto;
+  padding: 10px 30px;
+  color: #44464d;
+  background: #fff;
+  border-radius: 8px;
+
+  .subheading {
+    font-weight: 600;
+  }
+}
+
+table {
+  th {
+    padding-bottom: 10px;
+    padding-right: 80px;
+    border-bottom: solid 1px #ddd;
+    opacity: 0.7;
+    font: {
+      size: 12px;
+      weight: 600;
+    }
+    text: {
+      align: left;
+      transform: uppercase;
+    }
+  }
+
+  td {
+    padding: 15px 30px 15px 0;
   }
 }
