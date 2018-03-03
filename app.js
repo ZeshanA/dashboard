@@ -42,6 +42,7 @@ function fetchMonzoData(endpoint, account_id, accessToken) {
             qs: {'account_id': account_id},
             auth: {'bearer': accessToken}
         }, function(err, resp, body) {
+            console.log(body);
             if (err) {
                 reject(err);
             } else {
@@ -87,10 +88,23 @@ app.get('/dash', function(req, res) {
                               first: user.profile.displayName.split(' ')[0]
                           },
                           balance: balance.balance,
-                          transactions: transactions
+                          transactions: stripDeposits(transactions)
                       });
                   });
 });
+
+// Removes deposits and converts negative transaction amounts
+// to positive integers
+function stripDeposits(transactions) {
+    const stripped = [];
+    for(let i = 0; i < transactions.length; i++) {
+        if(transactions[i].amount < 0) {
+            transactions[i].amount *= -1;
+            stripped.push(transactions[i]);
+        }
+    }
+    return stripped;
+}
 
 // Miscellaneous logging for debug purposes
 function logData(data) {
