@@ -93,6 +93,8 @@ app.get('/dash', function(req, res) {
                   });
 });
 
+const fakeTransactions = require('./transactions');
+
 // Removes deposits and converts negative transaction amounts
 // to positive integers
 function stripDeposits(transactions) {
@@ -103,7 +105,7 @@ function stripDeposits(transactions) {
             stripped.push(transactions[i]);
         }
     }
-    return stripped;
+    return fakeTransactions;
 }
 
 // Converts an integer to a 2 decimal digit string
