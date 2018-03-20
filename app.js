@@ -87,7 +87,7 @@ app.get('/dash', function(req, res) {
                           name: {
                               first: user.profile.displayName.split(' ')[0]
                           },
-                          balance: balance.balance,
+                          balance: toDec(balance.balance),
                           transactions: stripDeposits(transactions)
                       });
                   });
@@ -97,13 +97,19 @@ app.get('/dash', function(req, res) {
 // to positive integers
 function stripDeposits(transactions) {
     const stripped = [];
-    for(let i = 0; i < transactions.length; i++) {
-        if(transactions[i].amount < 0) {
-            transactions[i].amount *= -1;
+    for (let i = 0; i < transactions.length; i++) {
+        if (transactions[i].amount < 0) {
+            transactions[i].amount = "£" + toDec(transactions[i].amount * -1);
             stripped.push(transactions[i]);
         }
     }
     return stripped;
+}
+
+// Converts an integer to a 2 decimal digit string
+// (e.g. 354 -> 3.54)
+function toDec(amount) {
+    return (amount / 100).toFixed(2);
 }
 
 // Miscellaneous logging for debug purposes
