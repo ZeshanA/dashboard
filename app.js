@@ -81,6 +81,8 @@ app.get('/dash', function(req, res) {
                       // We now have access to both the balance and the transactions list.
                       // Parse the raw JSON to allow extraction of transactions.
                       let transactions = JSON.parse(data).transactions;
+                      const strippedTransactions = stripDeposits(transactions);
+                      const problems = findProblems(strippedTransactions);
 
                       // Render the dashboard view with all the data it needs
                       res.render('dashboard', {
@@ -88,7 +90,9 @@ app.get('/dash', function(req, res) {
                               first: user.profile.displayName.split(' ')[0]
                           },
                           balance: toDec(balance.balance),
-                          transactions: stripDeposits(transactions)
+                          transactions: strippedTransactions,
+                          maxTransaction: problems[0],
+                          mostFrequent: problems[1]
                       });
                   });
 });
@@ -112,6 +116,67 @@ function stripDeposits(transactions) {
 // (e.g. 354 -> 3.54)
 function toDec(amount) {
     return (amount / 100).toFixed(2);
+}
+
+// Finds problematic transactions
+function findProblems(transactions) {
+    let maxTransaction = findMax(transactions);
+    let mostFrequent = findMostFrequent(transactions);
+    return [maxTransaction, mostFrequent];
+}
+
+// Returns the largest transaction in a list
+function findMax(transactions) {
+    let maxTransaction = {};
+    let maxAmount = 0;
+    for (let i = 0; i < transactions.length; i++) {
+        let entry = transactions[i];
+        let amount = parseFloat(entry.amount.replace("£", ""));
+        if (amount > maxAmount) {
+            maxAmount = amount;
+            maxTransaction = entry;
+        }
+    }
+    console.log(maxTransaction);
+    return maxTransaction;
+}
+
+// Returns a pseudo-transaction containing the most frequently
+// visited merchant and the total amount spent there
+function findMostFrequent(transactions) {
+    var merchants = {};
+    for (let i = 0; i < transactions.length; i++) {
+        let entry = transactions[i];
+        if (!merchants[entry.merchant]) {
+            merchants[entry.merchant] = [0, 0];
+        }
+        merchants[entry.merchant][0] += 1;
+        merchants[entry.merchant][1] += getValue(entry.amount);
+    }
+
+    let maxMerchant = "";
+    let maxVisitCount = 0;
+    let amountSpent = 0;
+    for (let merchant in merchants) {
+        let merchantInfo = merchants[merchant];
+        if (merchantInfo[0] > maxVisitCount) {
+            maxMerchant = merchant;
+            maxVisitCount = merchantInfo[0];
+            amountSpent = merchantInfo[1];
+        }
+    }
+    return {
+        merchant: maxMerchant,
+        visits: maxVisitCount,
+        amount: amountSpent
+    }
+}
+
+console.log(findProblems(fakeTransactions));
+
+// Returns a float value from a string like £12.31
+function getValue(value) {
+    return parseFloat(value.replace("£", ""));
 }
 
 // Miscellaneous logging for debug purposes

@@ -7,6 +7,7 @@ General
 */
 
 $monzoBG: #14233c;
+$starlingLogoColor: #7433FF;
 
 body {
   font-family: Museo Sans, Source Sans Pro, sans-serif;
@@ -101,7 +102,9 @@ Dashboard Page
 }
 
 .dash .modules {
-  margin-top: 40px;
+  width: 80%;
+  margin: 0px auto;
+  text-align: center;
 }
 
 .displayBG {
@@ -136,12 +139,15 @@ Dashboard Page
 
 .module {
   width: 340px;
-  margin: 10px auto;
+  height: 210px;
+  margin: 10px 10px;
   padding: 15px;
   color: #333;
   background: #fff;
   border-radius: 12px;
   box-shadow: 0 3px 5px rgba(0, 0, 0, 0.1);
+  display: inline-block;
+  vertical-align: middle;
 
   .label {
     opacity: 0.8;
@@ -151,6 +157,7 @@ Dashboard Page
 }
 
 .accountsWrap {
+  width: 250px;
   text-align: center;
   .balanceWrap {
     padding-bottom: 8px;
@@ -161,13 +168,34 @@ Dashboard Page
     font-size: 2em;
   }
   .accounts {
+    margin-top: 27px;
     list-style: none;
+
+    strong {
+      font-weight: 600;
+    }
+
+    .monzoAccount strong {
+      color: #f88379;
+    }
+
+    .starlingAccount strong {
+      color: $starlingLogoColor;
+    }
+
+    li {
+      margin-bottom: 10px;
+    }
   }
 }
 
+.problemWrap {
+  width: 300px;
+}
+
 .transactions {
-  max-width: 960px;
-  margin: 0 auto;
+  max-width: 770px;
+  margin: 40px auto;
   padding: 10px 30px;
   color: #44464d;
   background: #fff;
@@ -197,4 +225,59 @@ table {
   td {
     padding: 15px 30px 15px 0;
   }
+}
+
+.problemWrap .moduleHeading {
+  padding: 5px 0;
+  margin-bottom: 8px;
+  color: #999;
+  font-size: 14px;
+  text: {
+    align: center;
+    transform: uppercase;
+  }
+}
+
+$lightGrey: rgba(86, 140, 153, 0.07);
+$darkGrey: rgba(0, 0, 0, 0.5);
+
+.moduleContent {
+  padding: 10px;
+  text-align: center;
+  background: $lightGrey;
+
+  .amount, .subtitle {
+    margin: 10px auto;
+  }
+
+  .amount {
+    font-size: 24px;
+    text-align: center;
+  }
+
+  .subtitle {
+    font-size: 14px;
+    color: $darkGrey;
+  }
+}
+
+.suggestionWrap {
+  div {
+    width: 50%;
+    padding: 15px 10px 0 10px;
+    display: inline-block;
+    vertical-align: middle;
+    text-align: center;
+    box-sizing: border-box;
+  }
+
+  p {
+    margin: 0;
+  }
+}
+
+.sub {
+  font-size: 12px;
+  text-transform: uppercase;
+  color: $darkGrey;
 }

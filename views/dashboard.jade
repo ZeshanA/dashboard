@@ -3,7 +3,20 @@ html
     head
         title Dashboard
         link(rel='stylesheet', href='/css/dashboard.css')
+        script.
+            const ws = new WebSocket('ws://127.0.0.1:8080');
+
+            ws.addEventListener('open', function open() {
+                ws.send('something');
+            });
+
+            ws.addEventListener('message', function incoming(data) {
+
+            });
+
     body.dash
+        - function calcTarget(amount) {var val = parseFloat(amount.replace("£", "")); return "£" + (val / 2).toFixed(2);}
+        - function calcSavings(amount) {var val = parseFloat(amount.replace("£", "")); return "£" + (val / 2 * 6).toFixed(2);}
         header.headerBar
             p.logo Dashboard
         section.display
@@ -12,12 +25,37 @@ html
                 h1.greeting Welcome, #{name.first}!
                 p.comment Your finances are looking healthy.
             div.modules
+                section.module.problemWrap.max
+                    header.moduleHeading Largest Transaction
+                    div.moduleContent
+                        p.amount #{maxTransaction.amount}
+                        p.subtitle Spent at <strong>#{maxTransaction.merchant}</strong>
+                    div.suggestionWrap
+                        div.suggestion
+                            p.target #{calcTarget(maxTransaction.amount)}
+                            p.sub Spending Target
+                        div.suggestion
+                            p.subtitle #{calcSavings(maxTransaction.amount)}
+                            p.sub Saving In 6 Months
                 section.module.accountsWrap
                     div.balanceWrap
                         p.balance £#{balance}
                         p.label Your total balance
                     ul.accounts
-                        li.monzoAccount Monzo Account with a balance of £#{balance}
+                        li.monzoAccount <strong>Monzo Account</strong> – £#{balance}
+                        li.starlingAccount <strong>Starling Account</strong> – £41.41
+                section.module.problemWrap.freq
+                    header.moduleHeading Most Frequent Merchant
+                    div.moduleContent
+                        p.amount #{mostFrequent.amount}
+                        p.subtitle Spent over #{mostFrequent.visits} purchases at <strong>#{mostFrequent.merchant}</strong>
+                    div.suggestionWrap
+                        div.suggestion
+                            p.target #{mostFrequent.amount}
+                            p.sub Spending Target
+                        div.suggestion
+                            p.subtitle #{mostFrequent.amount}
+                            p.sub Saving In 6 Months
         section.transactions
             h2.subheading Transactions
             table.transactionsTable
@@ -37,14 +75,3 @@ html
                         td.date=entry.created
                         td.account=entry.account
                         td.category=entry.category
-
-        script.
-            const ws = new WebSocket('ws://127.0.0.1:8080');
-
-            ws.addEventListener('open', function open() {
-              ws.send('something');
-            });
-
-            ws.addEventListener('message', function incoming(data) {
-              
-            });
